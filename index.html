@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURAC — Modern Streetwear</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header id="site-header">
+        <nav>
+            <a href="#" class="logo">AURAC</a>
+
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#products" class="active">Shop</a></li>
+                <li><a href="#editorial">New Arrivals</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="icon-btn" id="open-cart" aria-label="Open cart">
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    <span class="badge badge-gold" id="cart-count">0</span>
+                </button>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <div id="mobile-menu">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#products">Shop</a></li>
+            <li><a href="#editorial">New Arrivals</a></li>
+        </ul>
+        <div class="mobile-bottom">
+            <a href="#">Instagram</a>
+            <a href="#">Support</a>
+            <a href="#">Size Guide</a>
+        </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <div class="cart-backdrop" id="cart-backdrop"></div>
+    <aside class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3 id="cart-title">Your Bag (0)</h3>
+            <button class="icon-btn" id="close-cart"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="cart-body">
+            <div id="cart-items"></div>
+            <p class="cart-empty" id="cart-empty">Your bag is empty. Add a piece to get started.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <strong id="cart-total">$0.00</strong>
+            </div>
+            <button class="btn-primary cart-checkout" id="cart-checkout" data-whatsapp="919328095257" disabled>Checkout →</button>
+        </div>
+    </aside>
+
+    <main>
+
+        <!-- HERO -->
+        <section class="hero">
+            <img class="hero-img"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_iNha6_NPwHfB8wB4jzGMTR23hJtsZV0gXA1Fe12GINlbF2lDKKZ_FXbW5xPkFKb3wjJxc018yBA6C1llrrViWBA_cqhTKdCmgysoM5DIxbZ5kXrrtzuH7CdI76P0dhSqHrDKLZAXUK4pHDebyvDQulq7KCKHMLz1psT7O1ecwIpAioAA2itM6ZPeBHQqUmVR3mvAgAeN-Ap2bTzBUOe8HMXTrl1bt9Etptf4cqXb8BTBVlnxJDiHOmNkBXRzvU9JwfJUYy0TYPQ"
+                alt="Hero model" />
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-eyebrow">Season Essentials 2024</div>
+                <h1 class="hero-title">Premium<br /><em>Streetwear</em><br />Redefined</h1>
+                <p class="hero-sub">Oversized fits and limited edition graphics built for the urban movement. 300GSM
+                    organic cotton. Zero compromise.</p>
+                <div class="hero-actions">
+                    <a href="#products" class="btn-primary">Shop the Drop</a>
+                    <a href="#editorial" class="btn-outline">Explore Collection</a>
+                </div>
+            </div>
+            <div class="hero-scroll">
+                <span>Scroll</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- TRUST STRIP -->
+        <div class="trust-strip">
+            <div class="trust-inner">
+                <div class="trust-item">
+                    <span class="material-symbols-outlined">assignment_return</span>
+                    <p>30-day easy returns</p>
+                </div>
+                <div class="trust-item">
+                    <span class="material-symbols-outlined">verified</span>
+                    <p>Authentic premium fabrics</p>
+                </div>
+                <div class="trust-item">
+                    <span class="material-symbols-outlined">support_agent</span>
+                    <p>24/7 style support</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTS -->
+        <section class="products" id="products">
+            <div class="section-inner">
+                <div class="section-header reveal">
+                    <span class="eyebrow">The Collection</span>
+                    <h2>Our <em>Favourites</em></h2>
+                </div>
+                <div class="grid-4" id="product-grid"></div>
+            </div>
+        </section>
+
+        <!-- VALUE PILLARS -->
+        <section class="value-pillars">
+            <div class="section-inner">
+                <div class="section-header reveal">
+                    <span class="eyebrow">Why AURAC</span>
+                    <h2>Built for <em>Daily Wear</em></h2>
+                </div>
+                <div class="pillars-grid">
+                    <article class="pillar-card reveal d1">
+                        <h3>Premium Fabric Standards</h3>
+                        <p>Every core tee uses heavyweight 300GSM organic cotton for structure, shape retention, and
+                            long-term durability.</p>
+                    </article>
+                    <article class="pillar-card reveal d2">
+                        <h3>Fit Engineered by Feedback</h3>
+                        <p>Our silhouettes are refined using thousands of real customer fit notes to balance drape,
+                            comfort, and movement.</p>
+                    </article>
+                    <article class="pillar-card reveal d3">
+                        <h3>Responsible Small-Batch Drops</h3>
+                        <p>Limited production runs reduce overstock while keeping every release intentional and fresh.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- EDITORIAL / SPOTLIGHT -->
+        <section class="editorial" id="editorial">
+            <div class="section-inner">
+                <div class="editorial-grid">
+                    <div class="editorial-img reveal">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxGAwbttqybCNO2sPpl-8x7twT7La_ZoGejY03jmXWDBD6Hqs7sy3mG0afnMaEEcPS4VuMBBFPkYBzi2SxbjbU0IjIpDPssdMpPzl_LAf88-e1np1bQrTFhPMlVumJUD8c1kNNnenxDvWnVpSV5Y2WXt_onWa-huAMW81Dou5D-pfd_l4t7GAmH-Xt0O4PFpZJ6kdlUyQwI-xo6Btk7HNyOUMYlNDPsFjcST2-tAgND9_BDVaQLcM7toITopY-DtmEzHWVq5S_MBc"
+                            alt="Monolith Series" />
+                    </div>
+                    <div class="editorial-body reveal d2">
+                        <span class="eyebrow">Featured Spotlight</span>
+                        <h2>The "Monolith"<br /><em>Heavyweight</em> Series</h2>
+                        <p>Crafted from our signature 300GSM organic cotton, the Monolith series defines the new
+                            standard of durability and silhouette. A piece that feels like armor but wears like a second
+                            skin.</p>
+                        <div class="editorial-price">$89.00</div>
+                        <div class="editorial-note">Limited Release · Ships in 3–5 days</div>
+                        <div class="editorial-actions">
+                            <button class="btn-primary add-to-cart" data-name="Monolith Heavyweight Tee"
+                                data-price="$89.00">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="testimonials">
+            <div class="testimonial-wrap">
+                <div class="section-header reveal">
+                    <span class="eyebrow">Customer Stories</span>
+                    <h2>What They're <em>Saying</em></h2>
+                </div>
+                <div class="stars reveal">
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="material-symbols-outlined">star</span>
+                </div>
+                <blockquote id="t-quote" class="reveal">
+                    "The quality and fit of their oversized tees is unmatched. It's the perfect balance of premium
+                    weight and breathable comfort for the city."
+                </blockquote>
+                <div class="testimonial-author reveal" id="t-author">Marcus V. — Verified Customer</div>
+                <div class="testimonial-dots">
+                    <button class="tdot active" data-i="0" aria-label="Testimonial 1"></button>
+                    <button class="tdot" data-i="1" aria-label="Testimonial 2"></button>
+                    <button class="tdot" data-i="2" aria-label="Testimonial 3"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FIT HELPER -->
+        <section class="fit-lab" id="fit-lab">
+            <div class="section-inner">
+                <div class="fit-lab-wrap reveal">
+                    <div class="fit-lab-copy">
+                        <span class="eyebrow">Find Your Size</span>
+                        <h2>2-Minute <em>Fit Helper</em></h2>
+                        <p>Use your height and preferred silhouette to get a fast size recommendation before checkout.</p>
+                    </div>
+                    <div class="fit-lab-form">
+                        <label>
+                            Height
+                            <select id="fit-height">
+                                <option value="short">Below 170 cm</option>
+                                <option value="mid" selected>170–183 cm</option>
+                                <option value="tall">Above 183 cm</option>
+                            </select>
+                        </label>
+                        <label>
+                            Build
+                            <select id="fit-build">
+                                <option value="slim">Slim</option>
+                                <option value="regular" selected>Regular</option>
+                                <option value="broad">Broad / Athletic</option>
+                            </select>
+                        </label>
+                        <label>
+                            Preferred Look
+                            <select id="fit-style">
+                                <option value="fitted">Clean fit</option>
+                                <option value="regular" selected>Regular fit</option>
+                                <option value="relaxed">Oversized fit</option>
+                            </select>
+                        </label>
+                        <button class="btn-primary" id="fit-calc" type="button">Get Size Suggestion</button>
+                        <p class="fit-result" id="fit-result">Recommended size: <strong>M</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq" id="faq">
+            <div class="section-inner">
+                <div class="section-header reveal">
+                    <span class="eyebrow">Need Help</span>
+                    <h2>Frequently Asked <em>Questions</em></h2>
+                </div>
+                <div class="faq-list reveal">
+                    <div class="faq-item">
+                        <button class="faq-q" aria-expanded="false">
+                            <span>How should I choose between regular and oversized fits?</span>
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                        <div class="faq-a">
+                            <p>If you prefer a cleaner silhouette, choose your usual size. For our signature drape and
+                                streetwear shape, go one size up.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-q" aria-expanded="false">
+                            <span>How fast is delivery?</span>
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                        <div class="faq-a">
+                            <p>Most orders dispatch within 24 to 48 hours. Delivery timelines vary by region and are
+                                shown clearly at checkout.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-q" aria-expanded="false">
+                            <span>Are returns free?</span>
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                        <div class="faq-a">
+                            <p>Yes. We offer free returns within 30 days on unworn items with original tags attached.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-q" aria-expanded="false">
+                            <span>Do your colors fade after washes?</span>
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                        <div class="faq-a">
+                            <p>Our garments are pre-treated and tested for fade resistance. Follow care instructions to
+                                keep color depth and print sharpness longer.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEWSLETTER -->
+        <section class="newsletter">
+            <span class="eyebrow" style="color:var(--gold)">Stay in the Loop</span>
+            <h2 class="reveal" style="color:var(--white);margin-bottom:12px">Join the AURAC <em
+                    style="color:var(--gold)">Inner Circle</em></h2>
+            <p class="reveal">Early access to drops, exclusive discounts, and style edits — straight to your inbox.</p>
+            <form class="email-form reveal" onsubmit="return false;">
+                <input type="email" placeholder="Your email address" autocomplete="email" />
+                <button type="submit">Subscribe →</button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner reveal">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">AURAC</a>
+                    <p>Modern essentials for the contemporary urban wardrobe. Designed for comfort, built for the
+                        street.</p>
+                </div>
+            </div>
+            <div class="footer-bottom reveal">
+                <div class="footer-social">
+                    <a href="#" aria-label="Instagram">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="X / Twitter">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Pinterest">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
+                        </svg>
+                    </a>
+                </div>
+                <p class="footer-copy">© 2026 AURAC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast">Added to bag</div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
