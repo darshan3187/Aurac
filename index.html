@@ -4,6 +4,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=(), payment=(), usb=()" />
     <title>AURAC — Modern Streetwear</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
@@ -47,9 +52,9 @@
             <li><a href="#editorial">New Arrivals</a></li>
         </ul>
         <div class="mobile-bottom">
-            <a href="#">Instagram</a>
+            <a href="https://www.instagram.com/aurac/" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a href="#">Support</a>
-            <a href="#">Size Guide</a>
+            <a href="#fit-lab">Size Guide</a>
         </div>
     </div>
 
@@ -212,37 +217,53 @@
                 <div class="fit-lab-wrap reveal">
                     <div class="fit-lab-copy">
                         <span class="eyebrow">Find Your Size</span>
-                        <h2>2-Minute <em>Fit Helper</em></h2>
-                        <p>Use your height and preferred silhouette to get a fast size recommendation before checkout.</p>
+                        <h2>Smart <em>Fit Helper</em></h2>
+                        <p>Create your fit profile once and get a cleaner size recommendation with alternatives and confidence.</p>
                     </div>
-                    <div class="fit-lab-form">
-                        <label>
-                            Height
-                            <select id="fit-height">
-                                <option value="short">Below 170 cm</option>
-                                <option value="mid" selected>170–183 cm</option>
-                                <option value="tall">Above 183 cm</option>
-                            </select>
-                        </label>
-                        <label>
-                            Build
-                            <select id="fit-build">
-                                <option value="slim">Slim</option>
-                                <option value="regular" selected>Regular</option>
-                                <option value="broad">Broad / Athletic</option>
-                            </select>
-                        </label>
-                        <label>
-                            Preferred Look
-                            <select id="fit-style">
-                                <option value="fitted">Clean fit</option>
-                                <option value="regular" selected>Regular fit</option>
-                                <option value="relaxed">Oversized fit</option>
-                            </select>
-                        </label>
-                        <button class="btn-primary" id="fit-calc" type="button">Get Size Suggestion</button>
-                        <p class="fit-result" id="fit-result">Recommended size: <strong>M</strong></p>
-                    </div>
+                    <form class="fit-lab-form" id="fit-form" novalidate>
+                        <p class="fit-form-title">Your Fit Profile</p>
+                        <div class="fit-fields fit-fields-metrics">
+                            <label class="fit-field">
+                                <span class="fit-label">Height</span>
+                                <div class="fit-input-wrap">
+                                    <input id="fit-height" type="number" min="140" max="220" step="1" value="176" inputmode="numeric" />
+                                    <span class="fit-unit">cm</span>
+                                </div>
+                            </label>
+                            <label class="fit-field">
+                                <span class="fit-label">Weight</span>
+                                <div class="fit-input-wrap">
+                                    <input id="fit-weight" type="number" min="35" max="180" step="1" value="72" inputmode="numeric" />
+                                    <span class="fit-unit">kg</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="fit-fields fit-fields-profile">
+                            <label class="fit-field">
+                                <span class="fit-label">Build</span>
+                                <select id="fit-build">
+                                    <option value="slim">Slim frame</option>
+                                    <option value="regular" selected>Regular</option>
+                                    <option value="broad">Broad / Athletic</option>
+                                </select>
+                            </label>
+                            <label class="fit-field">
+                                <span class="fit-label">Preferred look</span>
+                                <select id="fit-style">
+                                    <option value="fitted">Clean fit</option>
+                                    <option value="regular" selected>Regular fit</option>
+                                    <option value="relaxed">Oversized fit</option>
+                                </select>
+                            </label>
+                        </div>
+                        <!-- <button class="btn-primary" id="fit-calc" type="submit">See Recommended Size</button> -->
+                        <div class="fit-result" id="fit-result" aria-live="polite">
+                            <p class="fit-reco">Recommended size: <strong id="fit-size-main">M</strong></p>
+                            <p class="fit-alt">Also consider: <span id="fit-size-alt">S / L</span></p>
+                            <p class="fit-confidence">Confidence: <span id="fit-confidence">High</span></p>
+                            <p class="fit-note" id="fit-note">Balanced fit profile based on your inputs.</p>
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>
@@ -300,11 +321,10 @@
 
         <!-- NEWSLETTER -->
         <section class="newsletter">
-            <span class="eyebrow" style="color:var(--gold)">Stay in the Loop</span>
-            <h2 class="reveal" style="color:var(--white);margin-bottom:12px">Join the AURAC <em
-                    style="color:var(--gold)">Inner Circle</em></h2>
+            <span class="eyebrow newsletter-eyebrow">Stay in the Loop</span>
+            <h2 class="reveal newsletter-title">Join the AURAC <em>Inner Circle</em></h2>
             <p class="reveal">Early access to drops, exclusive discounts, and style edits — straight to your inbox.</p>
-            <form class="email-form reveal" onsubmit="return false;">
+            <form class="email-form reveal" id="newsletter-form">
                 <input type="email" placeholder="Your email address" autocomplete="email" />
                 <button type="submit">Subscribe →</button>
             </form>
@@ -350,7 +370,7 @@
 
     <div class="toast" id="toast">Added to bag</div>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 
 </html>

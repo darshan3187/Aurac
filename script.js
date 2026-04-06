@@ -60,12 +60,34 @@ const products = [
 ];
 
 const formatCurrency = (value) => `$${value.toFixed(2)}`;
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => {
+    const entities = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    };
+    return entities[char] || char;
+});
+
+const sanitizeHttpUrl = (value, fallback = 'https://via.placeholder.com/120x150/f5f0e8/222?text=AURAC') => {
+    try {
+        const url = new URL(String(value));
+        return /^https?:$/.test(url.protocol) ? url.toString() : fallback;
+    } catch {
+        return fallback;
+    }
+};
 
 const renderProducts = () => {
     if (!productGrid) return;
 
     productGrid.innerHTML = products.map((product, index) => {
         const delayClass = `d${(index % 4) + 1}`;
+        const safeName = escapeHtml(product.name);
+        const safeColor = escapeHtml(product.color);
+        const safeImage = sanitizeHttpUrl(product.image);
         const badgeHtml = product.badge === 'new'
             ? '<span class="product-badge badge-new">New</span>'
             : product.badge === 'sale'
@@ -79,17 +101,16 @@ const renderProducts = () => {
         return `
             <div class="product-card reveal ${delayClass}">
                 <div class="product-img-wrap">
-                    <img src="${product.image}" alt="${product.name}" />
+                    <img src="${safeImage}" alt="${safeName}" />
                     ${badgeHtml}
-                    <button class="product-wishlist"><span class="material-symbols-outlined">favorite</span></button>
-                    <button class="quick-add add-to-cart" data-name="${product.name}" data-price="${formatCurrency(product.price)}">
+                    <button class="quick-add add-to-cart" data-name="${safeName}" data-price="${formatCurrency(product.price)}">
                         <span class="material-symbols-outlined" style="font-size:16px">shopping_cart</span>
                         Quick Add
                     </button>
                 </div>
                 <div class="product-info">
-                    <div class="product-name">${product.name}</div>
-                    <div class="product-color">${product.color}</div>
+                    <div class="product-name">${safeName}</div>
+                    <div class="product-color">${safeColor}</div>
                     <div class="product-price">
                         <span class="${currentPriceClass}">${formatCurrency(product.price)}</span>
                         ${originalPriceHtml}
@@ -133,7 +154,11 @@ openCart?.addEventListener('click', openCartDrawer);
 closeCart?.addEventListener('click', closeCartDrawer);
 cartBackdrop?.addEventListener('click', closeCartDrawer);
 
-const parsePrice = (value) => Number(String(value).replace('$', '')) || 0;
+const parsePrice = (value) => {
+    const parsed = Number(String(value).replace(/[^\d.-]/g, ''));
+    if (!Number.isFinite(parsed) || parsed < 0) return 0;
+    return Math.min(parsed, 100000);
+};
 
 const getTotals = () => {
     let items = 0;
@@ -152,24 +177,29 @@ const renderCart = () => {
         cartEmptyEl.style.display = 'block';
         cartCheckout.disabled = true;
     } else {
-        cartItemsEl.innerHTML = entries.map((entry) => `
-                    <article class="cart-item" data-name="${entry.name}">
-                        <img src="${entry.image}" alt="${entry.name}" />
+        cartItemsEl.innerHTML = entries.map((entry) => {
+            const safeName = escapeHtml(entry.name);
+            const safeVariant = escapeHtml(entry.variant);
+            const safeImage = sanitizeHttpUrl(entry.image);
+            return `
+                    <article class="cart-item" data-name="${safeName}">
+                        <img src="${safeImage}" alt="${safeName}" />
                         <div class="cart-item-info">
-                            <div class="cart-item-name">${entry.name}</div>
-                            <div class="cart-item-var">${entry.variant}</div>
+                            <div class="cart-item-name">${safeName}</div>
+                            <div class="cart-item-var">${safeVariant}</div>
                             <div class="cart-item-meta">
                                 <div class="cart-item-price">$${entry.price.toFixed(2)}</div>
                                 <div class="cart-qty" aria-label="Quantity controls">
-                                    <button type="button" class="qty-btn" data-action="decrease" data-name="${entry.name}" aria-label="Decrease quantity">−</button>
+                                    <button type="button" class="qty-btn" data-action="decrease" data-name="${safeName}" aria-label="Decrease quantity">−</button>
                                     <span>${entry.qty}</span>
-                                    <button type="button" class="qty-btn" data-action="increase" data-name="${entry.name}" aria-label="Increase quantity">+</button>
+                                    <button type="button" class="qty-btn" data-action="increase" data-name="${safeName}" aria-label="Increase quantity">+</button>
                                 </div>
                             </div>
-                            <button type="button" class="cart-remove" data-action="remove" data-name="${entry.name}">Remove</button>
+                            <button type="button" class="cart-remove" data-action="remove" data-name="${safeName}">Remove</button>
                         </div>
                     </article>
-                `).join('');
+                `;
+        }).join('');
         cartEmptyEl.style.display = 'none';
         cartCheckout.disabled = false;
     }
@@ -189,7 +219,7 @@ const flashToast = (message) => {
 const buildWhatsAppCheckoutUrl = () => {
     const rawNumber = cartCheckout?.dataset.whatsapp || '';
     const whatsappNumber = rawNumber.replace(/\D/g, '');
-    if (!whatsappNumber) return null;
+    if (!/^\d{6,15}$/.test(whatsappNumber)) return null;
 
     const entries = Array.from(cartMap.values());
     const { total } = getTotals();
@@ -207,7 +237,9 @@ const buildWhatsAppCheckoutUrl = () => {
         'Please confirm availability and delivery details.'
     ].join('\n');
 
-    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    const checkoutUrl = new URL(`https://wa.me/${whatsappNumber}`);
+    checkoutUrl.searchParams.set('text', message);
+    return checkoutUrl.toString();
 };
 
 const upsertCartItem = ({ name, price, image }) => {
@@ -228,10 +260,10 @@ const upsertCartItem = ({ name, price, image }) => {
 
 document.querySelectorAll('.add-to-cart').forEach((btn) => {
     btn.addEventListener('click', () => {
-        const name = btn.dataset.name || 'Selected item';
+        const name = String(btn.dataset.name || 'Selected item').slice(0, 120);
         const price = parsePrice(btn.dataset.price || '$0.00');
         const cardImage = btn.closest('.product-card, .editorial')?.querySelector('img')?.src;
-        const image = cardImage || 'https://via.placeholder.com/120x150/f5f0e8/222?text=AURAC';
+        const image = sanitizeHttpUrl(cardImage);
 
         upsertCartItem({ name, price, image });
 
@@ -280,7 +312,7 @@ cartCheckout?.addEventListener('click', () => {
         return;
     }
 
-    window.open(url, '_blank', 'noopener');
+    window.open(url, '_blank', 'noopener,noreferrer');
     flashToast('Opening WhatsApp checkout');
 });
 
@@ -327,22 +359,117 @@ setInterval(() => setTestimonial((tIdx + 1) % testimonials.length), 4500);
 
 // ── FIT HELPER
 const fitHeight = document.getElementById('fit-height');
+const fitWeight = document.getElementById('fit-weight');
 const fitBuild = document.getElementById('fit-build');
 const fitStyle = document.getElementById('fit-style');
-const fitCalc = document.getElementById('fit-calc');
-const fitResult = document.getElementById('fit-result');
+const fitForm = document.getElementById('fit-form');
+const fitSizeMain = document.getElementById('fit-size-main');
+const fitSizeAlt = document.getElementById('fit-size-alt');
+const fitConfidence = document.getElementById('fit-confidence');
+const fitNote = document.getElementById('fit-note');
 
-fitCalc?.addEventListener('click', () => {
-    let size = 'M';
-    if (fitHeight.value === 'short') size = 'S';
-    if (fitHeight.value === 'tall') size = 'L';
-    if (fitBuild.value === 'broad' && size !== 'L') size = 'L';
-    if (fitStyle.value === 'fitted' && size === 'L') size = 'M';
-    if (fitStyle.value === 'fitted' && size === 'M' && fitHeight.value === 'short') size = 'S';
-    if (fitStyle.value === 'relaxed' && size === 'S') size = 'M';
-    if (fitStyle.value === 'relaxed' && size === 'M') size = 'L';
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const sizeLabels = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
-    fitResult.innerHTML = `Recommended size: <strong>${size}</strong> · Based on your selected profile`;
+const toConfidenceLabel = (score) => {
+    if (score >= 88) return 'High';
+    if (score >= 72) return 'Medium';
+    return 'Low';
+};
+
+const getFitRecommendation = ({ height, weight, build, style }) => {
+    const safeHeight = clamp(height, 140, 220);
+    const safeWeight = clamp(weight, 35, 180);
+
+    // Base index starts at M and shifts by physical metrics and fit preferences.
+    let index = 2;
+
+    if (safeHeight < 162) index -= 1;
+    else if (safeHeight >= 178 && safeHeight < 186) index += 1;
+    else if (safeHeight >= 186) index += 2;
+
+    if (safeWeight < 55) index -= 1;
+    else if (safeWeight >= 78 && safeWeight < 92) index += 1;
+    else if (safeWeight >= 92) index += 2;
+
+    if (build === 'slim') index -= 0.5;
+    if (build === 'broad') index += 0.75;
+
+    if (style === 'fitted') index -= 0.75;
+    if (style === 'relaxed') index += 0.75;
+
+    const bmi = safeWeight / ((safeHeight / 100) ** 2);
+    if (bmi < 19 && style !== 'relaxed') index -= 0.5;
+    if (bmi > 27) index += 0.5;
+
+    const roundedIndex = clamp(Math.round(index), 0, sizeLabels.length - 1);
+    const recommendation = sizeLabels[roundedIndex];
+
+    const lowerAlt = sizeLabels[clamp(roundedIndex - 1, 0, sizeLabels.length - 1)];
+    const upperAlt = sizeLabels[clamp(roundedIndex + 1, 0, sizeLabels.length - 1)];
+
+    let confidenceScore = 95;
+    if (safeHeight < 150 || safeHeight > 205) confidenceScore -= 14;
+    if (safeWeight < 42 || safeWeight > 145) confidenceScore -= 14;
+    confidenceScore = clamp(confidenceScore, 58, 98);
+
+    const noteParts = [];
+    noteParts.push(style === 'fitted' ? 'For a cleaner silhouette' : style === 'relaxed' ? 'For an oversized silhouette' : 'For a regular silhouette');
+    noteParts.push(`and a ${build} build profile`);
+
+    return {
+        recommendation,
+        alternatives: `${lowerAlt} / ${upperAlt}`,
+        confidence: toConfidenceLabel(confidenceScore),
+        note: `${noteParts.join(' ')}, ${recommendation} is the best starting point.`
+    };
+};
+
+const updateFitResult = () => {
+    if (!fitSizeMain || !fitSizeAlt || !fitConfidence || !fitNote) return;
+
+    const height = Number(fitHeight?.value);
+    const weight = Number(fitWeight?.value);
+    const build = fitBuild?.value || 'regular';
+    const style = fitStyle?.value || 'regular';
+
+    if (!Number.isFinite(height) || !Number.isFinite(weight)) {
+        fitNote.textContent = 'Enter valid height and weight to calculate your size.';
+        fitConfidence.textContent = 'Low';
+        return;
+    }
+
+    const result = getFitRecommendation({ height, weight, build, style });
+    fitSizeMain.textContent = result.recommendation;
+    fitSizeAlt.textContent = result.alternatives;
+    fitConfidence.textContent = result.confidence;
+    fitNote.textContent = result.note;
+};
+
+fitForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    updateFitResult();
+});
+
+['change', 'input'].forEach((eventName) => {
+    [fitHeight, fitWeight, fitBuild, fitStyle].forEach((field) => {
+        field?.addEventListener(eventName, updateFitResult);
+    });
+});
+
+updateFitResult();
+
+const newsletterForm = document.getElementById('newsletter-form');
+newsletterForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const emailInput = newsletterForm.querySelector('input[type="email"]');
+    const email = String(emailInput?.value || '').trim();
+    const looksValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    flashToast(looksValid ? 'You are subscribed' : 'Enter a valid email');
+    if (looksValid && emailInput) {
+        emailInput.value = '';
+    }
 });
 
 // ── FAQ
