@@ -473,26 +473,59 @@ newsletterForm?.addEventListener('submit', (event) => {
 });
 
 // ── FAQ
+const closeFaqItem = (item) => {
+    if (!item) return;
+
+    const answer = item.querySelector('.faq-a');
+    const button = item.querySelector('.faq-q');
+    const icon = button?.querySelector('.material-symbols-outlined');
+
+    item.classList.remove('open');
+    button?.setAttribute('aria-expanded', 'false');
+    if (icon) icon.textContent = 'add';
+
+    if (answer) {
+        answer.style.maxHeight = `${answer.scrollHeight}px`;
+        requestAnimationFrame(() => {
+            answer.style.maxHeight = '0px';
+        });
+    }
+};
+
+const openFaqItem = (item) => {
+    if (!item) return;
+
+    const answer = item.querySelector('.faq-a');
+    const button = item.querySelector('.faq-q');
+    const icon = button?.querySelector('.material-symbols-outlined');
+
+    item.classList.add('open');
+    button?.setAttribute('aria-expanded', 'true');
+    if (icon) icon.textContent = 'remove';
+
+    if (answer) {
+        answer.style.maxHeight = '0px';
+        requestAnimationFrame(() => {
+            answer.style.maxHeight = `${answer.scrollHeight}px`;
+        });
+    }
+};
+
 document.querySelectorAll('.faq-q').forEach((q) => {
     q.addEventListener('click', () => {
         const item = q.closest('.faq-item');
-        const answer = item.querySelector('.faq-a');
-        const icon = q.querySelector('.material-symbols-outlined');
         const isOpen = item.classList.contains('open');
 
         document.querySelectorAll('.faq-item').forEach((other) => {
-            other.classList.remove('open');
-            other.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
-            other.querySelector('.material-symbols-outlined').textContent = 'add';
+            if (other !== item && other.classList.contains('open')) {
+                closeFaqItem(other);
+            }
         });
 
         if (!isOpen) {
-            item.classList.add('open');
-            q.setAttribute('aria-expanded', 'true');
-            icon.textContent = 'remove';
-            answer.style.maxHeight = `${answer.scrollHeight}px`;
+            openFaqItem(item);
         } else {
-            answer.style.maxHeight = null;
+            closeFaqItem(item);
         }
     });
 });

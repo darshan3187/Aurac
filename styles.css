@@ -1161,7 +1161,15 @@ blockquote {
 .faq-a {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.35s var(--ease);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: max-height 0.38s var(--ease), opacity 0.2s ease, transform 0.38s var(--ease);
+    will-change: max-height, opacity, transform;
+}
+
+.faq-item.open .faq-a {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .faq-a p {
